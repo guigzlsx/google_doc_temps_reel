@@ -76,23 +76,23 @@
           const jsPDF = window.jspdf.jsPDF;
           const doc = new jsPDF({ unit: "pt", format: "a4" });
           const editor = document.getElementById("editor");
-          const imgs = editor.querySelectorAll("img");
-          if (imgs.length === 0) {
-            alert("Aucune image à exporter !");
-            return;
-          }
-          const pageWidth = doc.internal.pageSize.getWidth();
-          const pageHeight = doc.internal.pageSize.getHeight();
-          const margin = 20;
-          imgs.forEach((img, idx) => {
-            const imgData = img.src;
-            // Calcul du ratio pour que l'image tienne sur la page
-            const imgWidth = pageWidth - margin * 2;
-            const imgHeight = (img.naturalHeight * imgWidth) / img.naturalWidth;
-            if (idx > 0) doc.addPage();
-            doc.addImage(imgData, "PNG", margin, margin, imgWidth, imgHeight);
+
+          // Force le fond à blanc et le texte en noir pour l'export
+          const oldBg = editor.style.backgroundColor;
+          const oldColor = editor.style.color;
+          editor.style.backgroundColor = "#fff";
+          editor.style.color = "#111";
+          html2canvas(editor, { backgroundColor: "#fff" }).then((canvas) => {
+            const imgData = canvas.toDataURL("image/png");
+            const pageWidth = doc.internal.pageSize.getWidth();
+            const pageHeight = doc.internal.pageSize.getHeight();
+            const imgWidth = pageWidth - 40;
+            const imgHeight = (canvas.height * imgWidth) / canvas.width;
+            doc.addImage(imgData, "PNG", 20, 20, imgWidth, imgHeight);
+            doc.save("document.pdf");
+            editor.style.backgroundColor = oldBg; // Restaure le fond
+            editor.style.color = oldColor; // Restaure la couleur du texte
           });
-          doc.save("images.pdf");
         });
       // Suppression du code de gestion de la taille du texte
     </script>
