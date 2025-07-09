@@ -12,6 +12,8 @@
   "type": "commonjs",
   "dependencies": {
     "express": "^5.1.0",
-    "socket.io": "^4.8.1"
+    "socket.io": "^4.8.1",
+    "y-websocket": "^1.4.5",
+    "yjs": "^13.6.27"
   }
 }
