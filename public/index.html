@@ -20,10 +20,20 @@
           <button type="button" class="tool-btn" data-cmd="bold" title="Gras">
             <b>B</b>
           </button>
-          <button type="button" class="tool-btn" data-cmd="italic" title="Italique">
+          <button
+            type="button"
+            class="tool-btn"
+            data-cmd="italic"
+            title="Italique"
+          >
             <i>I</i>
           </button>
-          <button type="button" class="tool-btn" data-cmd="underline" title="Souligné">
+          <button
+            type="button"
+            class="tool-btn"
+            data-cmd="underline"
+            title="Souligné"
+          >
             <u>U</u>
           </button>
           <input
@@ -37,16 +47,18 @@
             value="16"
             style="width: 60px; margin-left: 8px"
           />
-          <span style="font-size: 0.95em; color: #888; margin-left: 2px">px</span>
+          <span style="font-size: 0.95em; color: #888; margin-left: 2px"
+            >px</span
+          >
         </div>
-        <div
+        <textarea
           id="editor"
           class="editor a4-page"
           contenteditable="true"
           spellcheck="true"
           autocomplete="off"
           aria-label="Zone d'édition"
-        ></div>
+        ></textarea>
       </section>
       <aside class="history-section" id="history">
         <!-- Historique des modifications -->
@@ -63,30 +75,30 @@
       });
       // Taille de police personnalisée
       const fontSizeInput = document.getElementById("font-size-input");
-      fontSizeInput.addEventListener('change', function() {
+      fontSizeInput.addEventListener("change", function () {
         const size = this.value;
         const sel = window.getSelection();
         if (sel && sel.rangeCount > 0) {
           const range = sel.getRangeAt(0);
           if (!sel.isCollapsed) {
             // Appliquer à la sélection (comme avant)
-            document.execCommand('styleWithCSS', true);
-            document.execCommand('fontSize', false, 7);
-            const editor = document.getElementById('editor');
+            document.execCommand("styleWithCSS", true);
+            document.execCommand("fontSize", false, 7);
+            const editor = document.getElementById("editor");
             const fonts = editor.querySelectorAll('font[size="7"]');
-            fonts.forEach(font => {
+            fonts.forEach((font) => {
               if (range.intersectsNode(font)) {
-                const span = document.createElement('span');
-                span.style.fontSize = size + 'px';
+                const span = document.createElement("span");
+                span.style.fontSize = size + "px";
                 span.innerHTML = font.innerHTML;
                 font.parentNode.replaceChild(span, font);
               }
             });
           } else {
             // Rien n'est sélectionné : insérer un span vide à la position du curseur et placer le caret dedans
-            const span = document.createElement('span');
-            span.style.fontSize = size + 'px';
-            span.appendChild(document.createTextNode('\u200B'));
+            const span = document.createElement("span");
+            span.style.fontSize = size + "px";
+            span.appendChild(document.createTextNode("\u200B"));
             range.insertNode(span);
             // Placer le caret à l'intérieur du span
             range.setStart(span.firstChild, 1);
