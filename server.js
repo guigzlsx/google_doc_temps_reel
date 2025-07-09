@@ -10,12 +10,17 @@ const io = new Server(server);
 // Serve static files (frontend)
 app.use(express.static(path.join(__dirname, 'public')));
 
+let currentText = '';
+
 io.on('connection', (socket) => {
   console.log('Un client est connecté');
 
-  socket.on('message', (msg) => {
-    console.log('Message reçu :', msg);
-    io.emit('message', msg); // Broadcast à tous les clients
+  // Envoie le texte actuel au nouvel arrivant
+  socket.emit('text_update', currentText);
+
+  socket.on('text_update', (text) => {
+    currentText = text;
+    socket.broadcast.emit('text_update', text);
   });
 
   socket.on('disconnect', () => {
