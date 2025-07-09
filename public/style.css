@@ -15,7 +15,7 @@ body {
   align-items: center;
   justify-content: space-between;
   border-bottom: 1px solid #23272a;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
   position: sticky;
   top: 0;
   z-index: 10;
@@ -83,7 +83,7 @@ body {
   background: #23272a;
   color: #e3e6ea;
   margin: 32px auto;
-  box-shadow: 0 4px 24px rgba(0,0,0,0.5);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.5);
   border-radius: 4px;
   padding: 48px 56px 56px 56px;
   overflow-y: auto;
@@ -105,10 +105,9 @@ body {
   border-bottom: 1px solid #23272a;
   padding: 8px 12px;
   margin-bottom: 0;
-  box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
 }
 .tool-btn,
-.tool-input,
 .tool-select {
   background: #181a1b;
   color: #e3e6ea;
@@ -152,20 +151,6 @@ body {
   align-items: center;
 }
 
-.history-section {
-  min-width: 200px;
-  max-width: 260px;
-  background: #23272a;
-  border-radius: 8px;
-  box-shadow: 0 1px 6px rgba(0,0,0,0.04);
-  padding: 20px 14px;
-  font-size: 0.97rem;
-  color: #aaa;
-  height: fit-content;
-  font-family: "Inter", "Roboto", Arial, sans-serif;
-  border: 1px solid #23272a;
-}
-
 @media (max-width: 900px) {
   .main-container {
     flex-direction: column;
@@ -173,8 +158,7 @@ body {
     gap: 20px;
     margin-top: 24px;
   }
-  .editor-section,
-  .history-section {
+  .editor-section {
     min-width: unset;
     max-width: 98vw;
     width: 98vw;

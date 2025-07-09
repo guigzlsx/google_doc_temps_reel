@@ -4,6 +4,8 @@
     <meta charset="UTF-8" />
     <title>Mini Google Docs</title>
     <link rel="stylesheet" href="style.css" />
+    <!-- jsPDF CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   </head>
   <body>
     <header class="header">
@@ -36,20 +38,14 @@
           >
             <u>U</u>
           </button>
-          <input
-            type="number"
-            class="tool-input"
-            id="font-size-input"
-            title="Taille du texte (px)"
-            min="8"
-            max="72"
-            step="1"
-            value="16"
-            style="width: 60px; margin-left: 8px"
-          />
-          <span style="font-size: 0.95em; color: #888; margin-left: 2px"
-            >px</span
+          <button
+            type="button"
+            class="tool-btn"
+            id="export-pdf-btn"
+            title="Exporter en PDF"
           >
+            Exporter en PDF
+          </button>
         </div>
         <textarea
           id="editor"
@@ -60,57 +56,31 @@
           aria-label="Zone d'édition"
         ></textarea>
       </section>
-      <aside class="history-section" id="history">
-        <!-- Historique des modifications -->
-      </aside>
+      <!-- Suppression de la section historique -->
     </main>
     <script src="/socket.io/socket.io.js"></script>
     <script src="app.js"></script>
     <script>
       // Barre d'outils : commandes de mise en forme
-      document.querySelectorAll(".tool-btn").forEach((btn) => {
+      document.querySelectorAll(".tool-btn[data-cmd]").forEach((btn) => {
         btn.addEventListener("click", () => {
           document.execCommand(btn.dataset.cmd, false, null);
         });
       });
-      // Taille de police personnalisée
-      const fontSizeInput = document.getElementById("font-size-input");
-      fontSizeInput.addEventListener("change", function () {
-        const size = this.value;
-        const sel = window.getSelection();
-        if (sel && sel.rangeCount > 0) {
-          const range = sel.getRangeAt(0);
-          if (!sel.isCollapsed) {
-            // Appliquer à la sélection (comme avant)
-            document.execCommand("styleWithCSS", true);
-            document.execCommand("fontSize", false, 7);
-            const editor = document.getElementById("editor");
-            const fonts = editor.querySelectorAll('font[size="7"]');
-            fonts.forEach((font) => {
-              if (range.intersectsNode(font)) {
-                const span = document.createElement("span");
-                span.style.fontSize = size + "px";
-                span.innerHTML = font.innerHTML;
-                font.parentNode.replaceChild(span, font);
-              }
-            });
-          } else {
-            // Rien n'est sélectionné : insérer un span vide à la position du curseur et placer le caret dedans
-            const span = document.createElement("span");
-            span.style.fontSize = size + "px";
-            span.appendChild(document.createTextNode("\u200B"));
-            range.insertNode(span);
-            // Placer le caret à l'intérieur du span
-            range.setStart(span.firstChild, 1);
-            range.setEnd(span.firstChild, 1);
-            sel.removeAllRanges();
-            sel.addRange(range);
-          }
-        }
-      });
-      // Valeur de base sur tout le texte
-      document.getElementById("editor").style.fontSize =
-        fontSizeInput.value + "px";
+      // Bouton Export PDF
+      document
+        .getElementById("export-pdf-btn")
+        .addEventListener("click", function () {
+          const jsPDF = window.jspdf.jsPDF;
+          const doc = new jsPDF({ unit: "pt", format: "a4" });
+          const text = document.getElementById("editor").value;
+          const margin = 40;
+          const pageWidth = doc.internal.pageSize.getWidth() - margin * 2;
+          const lines = doc.splitTextToSize(text, pageWidth);
+          doc.text(lines, margin, margin + 20);
+          doc.save("document.pdf");
+        });
+      // Suppression du code de gestion de la taille du texte
     </script>
   </body>
 </html>
