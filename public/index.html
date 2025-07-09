@@ -1,15 +1,78 @@
 <!DOCTYPE html>
 <html lang="fr">
-<head>
-  <meta charset="UTF-8">
-  <title>Socket.IO Chat</title>
-  <link rel="stylesheet" href="style.css">
-</head>
-<body>
-  <h1>Éditeur collaboratif</h1>
-  <textarea id="editor" rows="15" cols="60" placeholder="Commencez à écrire..." autocomplete="off"></textarea>
-
-  <script src="/socket.io/socket.io.js"></script>
-  <script src="app.js"></script>
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Mini Google Docs</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <header class="header">
+      <div class="doc-title" contenteditable="true" spellcheck="false">
+        Mon Document
+      </div>
+      <div class="users" id="users-list">
+        <!-- Avatars ou initiales des utilisateurs -->
+      </div>
+    </header>
+    <main class="main-container">
+      <section class="editor-section">
+        <div class="toolbar">
+          <button type="button" class="tool-btn" data-cmd="bold" title="Gras">
+            <b>B</b>
+          </button>
+          <button
+            type="button"
+            class="tool-btn"
+            data-cmd="italic"
+            title="Italique"
+          >
+            <i>I</i>
+          </button>
+          <button
+            type="button"
+            class="tool-btn"
+            data-cmd="underline"
+            title="Souligné"
+          >
+            <u>U</u>
+          </button>
+          <select
+            class="tool-select"
+            id="font-size-select"
+            title="Taille du texte"
+          >
+            <option value="3">Normal</option>
+            <option value="4">Grand</option>
+            <option value="5">Très grand</option>
+          </select>
+        </div>
+        <div
+          id="editor"
+          class="editor a4-page"
+          contenteditable="true"
+          spellcheck="true"
+          autocomplete="off"
+          aria-label="Zone d'édition"
+        ></div>
+      </section>
+      <aside class="history-section" id="history">
+        <!-- Historique des modifications -->
+      </aside>
+    </main>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="app.js"></script>
+    <script>
+      // Barre d'outils : commandes de mise en forme
+      document.querySelectorAll(".tool-btn").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          document.execCommand(btn.dataset.cmd, false, null);
+        });
+      });
+      document
+        .getElementById("font-size-select")
+        .addEventListener("change", function () {
+          document.execCommand("fontSize", false, this.value);
+        });
+    </script>
+  </body>
 </html>
