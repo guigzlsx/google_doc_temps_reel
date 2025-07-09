@@ -15,13 +15,18 @@ let currentText = '';
 io.on('connection', (socket) => {
   console.log('Un client est connecté');
 
-  // Envoie le texte actuel au nouvel arrivant
-  socket.emit('text_update', currentText);
-
-  socket.on('text_update', (text) => {
-    currentText = text;
-    socket.broadcast.emit('text_update', text);
+  // Envoie le texte actuel au nouvel arrivant (pour CodeMirror)
+  socket.on('cm_update', (data) => {
+    currentText = data.value;
+    socket.broadcast.emit('cm_update', data);
   });
+
+  socket.on('cm_cursor', (data) => {
+    socket.broadcast.emit('cm_cursor', data);
+  });
+
+  // Optionnel : envoyer le texte actuel à la connexion
+  socket.emit('cm_update', { userId: 'server', value: currentText, cursor: { line: 0, ch: 0 } });
 
   socket.on('disconnect', () => {
     console.log('Client déconnecté');
