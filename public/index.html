@@ -36,15 +36,20 @@
           >
             <u>U</u>
           </button>
-          <select
-            class="tool-select"
-            id="font-size-select"
-            title="Taille du texte"
+          <input
+            type="number"
+            class="tool-input"
+            id="font-size-input"
+            title="Taille du texte (px)"
+            min="8"
+            max="72"
+            step="1"
+            value="16"
+            style="width: 60px; margin-left: 8px"
+          />
+          <span style="font-size: 0.95em; color: #888; margin-left: 2px"
+            >px</span
           >
-            <option value="3">Normal</option>
-            <option value="4">Grand</option>
-            <option value="5">Très grand</option>
-          </select>
         </div>
         <div
           id="editor"
@@ -68,11 +73,30 @@
           document.execCommand(btn.dataset.cmd, false, null);
         });
       });
-      document
-        .getElementById("font-size-select")
-        .addEventListener("change", function () {
-          document.execCommand("fontSize", false, this.value);
-        });
+      // Taille de police personnalisée
+      const fontSizeInput = document.getElementById("font-size-input");
+      fontSizeInput.addEventListener("change", function () {
+        const size = this.value;
+        const sel = window.getSelection();
+        if (sel && sel.rangeCount > 0 && !sel.isCollapsed) {
+          // Appliquer à la sélection
+          document.execCommand("fontSize", false, 7); // 7 = taille max
+          // Remplacer les <font size="7"> par un span avec font-size en px
+          document.querySelectorAll('font[size="7"]').forEach((font) => {
+            const span = document.createElement("span");
+            span.style.fontSize = size + "px";
+            span.innerHTML = font.innerHTML;
+            font.parentNode.replaceChild(span, font);
+          });
+        } else {
+          // Appliquer à tout le texte si rien n'est sélectionné
+          const editor = document.getElementById("editor");
+          editor.style.fontSize = size + "px";
+        }
+      });
+      // Valeur de base sur tout le texte
+      document.getElementById("editor").style.fontSize =
+        fontSizeInput.value + "px";
     </script>
   </body>
 </html>
