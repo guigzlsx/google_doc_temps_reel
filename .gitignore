@@ -1,0 +1,24 @@
+# Node
+node_modules/
+
+# Logs
+*.log
+
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db
+
+# Vim
+*.swp
+*.swo
+
+# Backup files
+*~
+
+# Temp files
+*.tmp
+
+# (optionnel) lock file si tu ne veux pas le versionner
+# package-lock.json
