@@ -12,6 +12,7 @@ editor.addEventListener('paste', function (e) {
         const reader = new FileReader();
         reader.onload = function (event) {
           insertImageAtCursor(event.target.result);
+          socket.emit('text_update', editor.innerHTML); // Synchronise immédiatement
         };
         reader.readAsDataURL(file);
         e.preventDefault();
@@ -30,6 +31,7 @@ editor.addEventListener('drop', function (e) {
         const reader = new FileReader();
         reader.onload = function (event) {
           insertImageAtCursor(event.target.result);
+          socket.emit('text_update', editor.innerHTML); // Synchronise immédiatement
         };
         reader.readAsDataURL(file);
       }
