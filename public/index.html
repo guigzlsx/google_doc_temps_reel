@@ -6,9 +6,8 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <h1>Chat</h1>
-  <input id="message" autocomplete="off" /><button onclick="sendMessage()">Envoyer</button>
-  <ul id="messages"></ul>
+  <h1>Éditeur collaboratif</h1>
+  <textarea id="editor" rows="15" cols="60" placeholder="Commencez à écrire..." autocomplete="off"></textarea>
 
   <script src="/socket.io/socket.io.js"></script>
   <script src="app.js"></script>

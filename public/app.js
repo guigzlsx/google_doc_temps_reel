@@ -1,13 +1,18 @@
 const socket = io();
 
-function sendMessage() {
-  const input = document.getElementById('message');
-  socket.emit('message', input.value);
-  input.value = '';
-}
+const editor = document.getElementById('editor');
+let isLocalChange = false;
 
-socket.on('message', (msg) => {
-  const li = document.createElement('li');
-  li.textContent = msg;
-  document.getElementById('messages').appendChild(li);
+// Envoi du texte à chaque modification locale
+editor.addEventListener('input', () => {
+  isLocalChange = true;
+  socket.emit('text_update', editor.value);
+});
+
+// Réception des modifications des autres utilisateurs
+socket.on('text_update', (text) => {
+  if (!isLocalChange) {
+    editor.value = text;
+  }
+  isLocalChange = false;
 });
