@@ -76,23 +76,30 @@
           const jsPDF = window.jspdf.jsPDF;
           const doc = new jsPDF({ unit: "pt", format: "a4" });
           const editor = document.getElementById("editor");
-
-          // Force le fond à blanc et le texte en noir pour l'export
-          const oldBg = editor.style.backgroundColor;
-          const oldColor = editor.style.color;
-          editor.style.backgroundColor = "#fff";
-          editor.style.color = "#111";
-          html2canvas(editor, { backgroundColor: "#fff" }).then((canvas) => {
-            const imgData = canvas.toDataURL("image/png");
-            const pageWidth = doc.internal.pageSize.getWidth();
-            const pageHeight = doc.internal.pageSize.getHeight();
-            const imgWidth = pageWidth - 40;
-            const imgHeight = (canvas.height * imgWidth) / canvas.width;
-            doc.addImage(imgData, "PNG", 20, 20, imgWidth, imgHeight);
-            doc.save("document.pdf");
-            editor.style.backgroundColor = oldBg; // Restaure le fond
-            editor.style.color = oldColor; // Restaure la couleur du texte
+          const text = editor.innerText || editor.textContent || "";
+          const pageWidth = doc.internal.pageSize.getWidth();
+          const pageHeight = doc.internal.pageSize.getHeight();
+          const marginX = 40;
+          const marginY = 60;
+          const maxWidth = pageWidth - 2 * marginX;
+          const lineHeight = 18;
+          let cursorY = marginY;
+          // Découpe le texte en paragraphes selon les retours à la ligne
+          const paragraphs = text.split(/\r?\n/);
+          paragraphs.forEach((paragraph) => {
+            const lines = doc.splitTextToSize(paragraph, maxWidth);
+            lines.forEach((line) => {
+              if (cursorY + lineHeight > pageHeight - marginY) {
+                doc.addPage();
+                cursorY = marginY;
+              }
+              doc.text(line, marginX, cursorY);
+              cursorY += lineHeight;
+            });
+            // Ajoute un espace après chaque paragraphe
+            cursorY += lineHeight / 2;
           });
+          doc.save("document.pdf");
         });
       // Suppression du code de gestion de la taille du texte
     </script>
